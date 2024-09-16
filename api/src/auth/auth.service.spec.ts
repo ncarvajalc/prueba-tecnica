@@ -4,6 +4,7 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { UserEntity } from '../users/entities/user.entity';
+import { RevokedTokenService } from '../revoked-tokens/revoked-tokens.service';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -32,6 +33,10 @@ describe('AuthService', () => {
     }),
   };
 
+  const mockRevokedTokenService = {
+    revokeToken: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -47,6 +52,10 @@ describe('AuthService', () => {
         {
           provide: ConfigService,
           useValue: mockConfigService,
+        },
+        {
+          provide: RevokedTokenService,
+          useValue: mockRevokedTokenService,
         },
       ],
     }).compile();

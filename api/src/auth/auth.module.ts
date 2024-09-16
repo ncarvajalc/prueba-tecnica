@@ -9,13 +9,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from '../users/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { LocalStrategy } from './strategies/local.strategy';
+import { RevokedTokenService } from '../revoked-tokens/revoked-tokens.service';
+import { RevokedTokenEntity } from '../revoked-tokens/entities/revoked-token.entity';
 
 @Module({
   imports: [
     UsersModule,
     PassportModule,
     ConfigModule,
-    TypeOrmModule.forFeature([UserEntity]),
+    TypeOrmModule.forFeature([UserEntity, RevokedTokenEntity]),
   ],
   providers: [
     AuthService,
@@ -24,6 +26,7 @@ import { LocalStrategy } from './strategies/local.strategy';
     JwtStrategy,
     LocalStrategy,
     ConfigService,
+    RevokedTokenService,
   ],
   exports: [AuthService],
 })

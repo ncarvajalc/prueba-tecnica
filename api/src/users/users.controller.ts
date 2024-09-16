@@ -13,6 +13,7 @@ import { UserDto } from './dto/user.dto';
 import { UsersService } from './users.service';
 import { LocalAuthGuard } from '../auth/guards/local-auth.guard';
 import { AuthService } from '../auth/auth.service';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -33,5 +34,12 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   async login(@Req() req) {
     return this.authService.login(req);
+  }
+
+  @Post('logout')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async logout(@Req() req) {
+    return this.authService.logout(req);
   }
 }

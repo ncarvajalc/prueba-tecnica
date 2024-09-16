@@ -21,6 +21,7 @@ describe('UsersController (e2e)', () => {
   };
   const mockAuthService = {
     login: jest.fn().mockResolvedValue({ token: 'mocked-token' }),
+    logout: jest.fn().mockResolvedValue(true),
   };
 
   beforeAll(async () => {

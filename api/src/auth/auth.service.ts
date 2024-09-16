@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { ConfigService } from '@nestjs/config';
 import { UserEntity } from '../users/entities/user.entity';
+import { RevokedTokenService } from '../revoked-tokens/revoked-tokens.service';
 
 @Injectable()
 export class AuthService {
@@ -10,6 +11,7 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
     private configService: ConfigService,
+    private revokedTokenService: RevokedTokenService,
   ) {}
 
   async validateUser(
@@ -32,5 +34,11 @@ export class AuthService {
         expiresIn: this.configService.get('jwt.expiresIn'),
       }),
     };
+  }
+
+  async logout(req: any) {
+    const bearerToken = req.headers['authorization'];
+    const token = bearerToken.split(' ')[1];
+    await this.revokedTokenService.revokeToken(token);
   }
 }
