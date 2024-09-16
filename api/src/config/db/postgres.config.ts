@@ -12,5 +12,5 @@ export const postgresConfig = () =>
     database: process.env.POSTGRES_DB || 'postgres',
     entities: ['dist/**/*.entity{.ts,.js}'],
     dropSchema: process.env.NODE_ENV === 'development',
-    synchronize: process.env.NODE_ENV === 'development',
+    synchronize: true,
   });

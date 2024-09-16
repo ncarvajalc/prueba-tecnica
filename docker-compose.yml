@@ -8,34 +8,40 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 5s
+      retries: 5
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - prod_network
 
-  # api:
-  #   build:
-  #     context: ./api
-  #     dockerfile: Dockerfile
-  #   container_name: api
-  #   environment:
-  #     POSTGRES_HOST: ${POSTGRES_HOST}
-  #     POSTGRES_PORT: ${POSTGRES_PORT}
-  #     DATABASE_USER: ${POSTGRES_USER}
-  #     DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
-  #     DATABASE_NAME: ${POSTGRES_DB}
-  #     JWT_SECRET: ${JWT_SECRET}
-  #     JWT_EXPIRES_IN: ${JWT_EXPIRES_IN}
-  #     PLACES_API_KEY: ${PLACES_API_KEY}
-  #     PLACES_API_URL: ${PLACES_API_URL}
-  #     GEO_CODING_API_URL: ${GEO_CODING_API_URL}
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     - postgres
-  #   networks:
-  #     - prod_network
-  #   restart: unless-stopped
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: api
+    environment:
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      DATABASE_USER: ${POSTGRES_USER}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      DATABASE_NAME: ${POSTGRES_DB}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN}
+      PLACES_API_KEY: ${PLACES_API_KEY}
+      PLACES_API_URL: ${PLACES_API_URL}
+      GEO_CODING_API_URL: ${GEO_CODING_API_URL}
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - prod_network
+    restart: unless-stopped
 
 networks:
   prod_network:
