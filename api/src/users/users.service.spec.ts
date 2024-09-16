@@ -4,13 +4,19 @@ import { Repository } from 'typeorm';
 import { TypeOrmTestingConfig } from '../shared/testing-utils/typeorm-testing-config';
 import { UserEntity } from './entities/user.entity';
 import { UsersService } from './users.service';
-
 import { faker } from '@faker-js/faker';
+import {
+  comparePassword,
+  hashPassword,
+} from '../shared/security/password-utils';
+import { UnauthorizedException } from '@nestjs/common';
+
+jest.mock('../shared/security/password-utils');
 
 describe('UsersService', () => {
   let service: UsersService;
   let repository: Repository<UserEntity>;
-  let countriesList: UserEntity[];
+  let usersList: UserEntity[];
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -27,14 +33,14 @@ describe('UsersService', () => {
 
   const seedDatabase = async () => {
     repository.clear();
-    countriesList = [];
+    usersList = [];
     for (let i = 0; i < 5; i++) {
       const user: UserEntity = await repository.save({
         login: faker.internet.userName(),
         name: faker.person.fullName(),
         password: faker.internet.password(),
       });
-      countriesList.push(user);
+      usersList.push(user);
     }
   };
 
@@ -45,11 +51,11 @@ describe('UsersService', () => {
   it('findAll should return all countries', async () => {
     const countries: UserEntity[] = await service.findAll();
     expect(countries).not.toBeNull();
-    expect(countries).toHaveLength(countriesList.length);
+    expect(countries).toHaveLength(usersList.length);
   });
 
   it('findOne should return a user by login', async () => {
-    const storedUser: UserEntity = countriesList[0];
+    const storedUser: UserEntity = usersList[0];
     const user: UserEntity = await service.findOne(storedUser.login);
     expect(user).not.toBeNull();
     expect(user.name).toEqual(storedUser.name);
@@ -70,6 +76,8 @@ describe('UsersService', () => {
       password: faker.internet.password({ prefix: 'Password123!' }),
     };
 
+    (hashPassword as jest.Mock).mockResolvedValue(user.password);
+
     const newUser: UserEntity = await service.create(user);
     expect(newUser).not.toBeNull();
 
@@ -81,7 +89,7 @@ describe('UsersService', () => {
   });
 
   it('update should modify a user', async () => {
-    const user: UserEntity = countriesList[0];
+    const user: UserEntity = usersList[0];
     user.name = 'New name';
 
     const updatedUser: UserEntity = await service.update(user.login, user);
@@ -95,7 +103,7 @@ describe('UsersService', () => {
   });
 
   it('update should throw an exception for an invalid user', async () => {
-    let user: UserEntity = countriesList[0];
+    let user: UserEntity = usersList[0];
     user = {
       ...user,
       name: 'New name',
@@ -107,7 +115,7 @@ describe('UsersService', () => {
   });
 
   it('remove should remove a user', async () => {
-    const user: UserEntity = countriesList[0];
+    const user: UserEntity = usersList[0];
     await service.remove(user.login);
 
     const deletedUser: UserEntity = await repository.findOne({
@@ -121,5 +129,45 @@ describe('UsersService', () => {
       'message',
       'The user with the given login was not found',
     );
+  });
+
+  describe('login', () => {
+    it('should return the user when login is valid', async () => {
+      const user = usersList[0];
+      const password = user.password;
+
+      (comparePassword as jest.Mock).mockResolvedValue(true);
+
+      const foundUser = await service.login(user.login, password);
+
+      expect(comparePassword).toHaveBeenCalledWith(password, user.password);
+      expect(foundUser).toEqual(user);
+    });
+
+    it('should throw UnauthorizedException if user does not exist', async () => {
+      const invalidLogin = 'nonExistentUser';
+      const password = 'password';
+
+      await expect(service.login(invalidLogin, password)).rejects.toThrow(
+        UnauthorizedException,
+      );
+      await expect(
+        service.login(invalidLogin, password),
+      ).rejects.toHaveProperty('message', 'Invalid credentials');
+    });
+
+    it('should throw UnauthorizedException if password is incorrect', async () => {
+      const user = usersList[0];
+      const wrongPassword = 'wrongPassword';
+
+      (comparePassword as jest.Mock).mockResolvedValue(false);
+
+      await expect(service.login(user.login, wrongPassword)).rejects.toThrow(
+        UnauthorizedException,
+      );
+      await expect(
+        service.login(user.login, wrongPassword),
+      ).rejects.toHaveProperty('message', 'Invalid credentials');
+    });
   });
 });
