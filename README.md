@@ -40,7 +40,11 @@ Este repositorio contiene la solución a la prueba técnica de Tyba. A continuac
     docker compose up -d
     ```
 
-5. El servicio estará disponible en la siguiente URL: [http://localhost:3000](http://localhost:3000)
+5. El servicio estará disponible en la siguiente URL: [http://localhost:3000/api/v1](http://localhost:3000/api/v1)
+
+## Documentación
+
+La documentación de la API se encuentra disponible en la siguiente URL: [http://localhost:3000/api](http://localhost:3000/api). Consiste en una documentación de Swagger para facilitar el uso de la API.
 
 ## Pruebas
 
