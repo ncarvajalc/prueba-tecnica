@@ -65,7 +65,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"login\": \"nipets\",\n    \"password\": \"Password123!\",\n    \"name\": \"Nicolás Carvajal\"\n\n}",
+							"raw": "{\n    \"login\": \"{{$randomUserName}}\",\n    \"password\": \"Password123!\",\n    \"name\": \"Nicolás Carvajal\"\n\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -140,7 +140,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"login\": \"nipets2\",\n    \"password\": \"Password123!\",\n    \"name\": \"Nicolás Carvajal\"\n\n}",
+							"raw": "{\n    \"login\": \"{{$randomUserName}}\",\n    \"password\": \"Password123!\",\n    \"name\": \"Nicolás Carvajal\"\n\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -191,7 +191,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"login\": \"nipets\",\n    \"password\": \"Password123!\",\n    \"name\": \"Nicolás Carvajal\"\n\n}",
+							"raw": "{\n    \"login\": \"{{userLogin}}\",\n    \"password\": \"Password123!\",\n    \"name\": \"Nicolás Carvajal\"\n\n}",
 							"options": {
 								"raw": {
 									"language": "json"
