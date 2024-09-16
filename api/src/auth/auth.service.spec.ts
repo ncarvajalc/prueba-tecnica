@@ -117,4 +117,20 @@ describe('AuthService', () => {
       expect(mockConfigService.get).toHaveBeenCalledWith('jwt.expiresIn');
     });
   });
+
+  describe('logout', () => {
+    it('should revoke the token on logout', async () => {
+      const mockRequest = {
+        headers: {
+          authorization: 'Bearer validToken',
+        },
+      };
+
+      await service.logout(mockRequest);
+
+      expect(mockRevokedTokenService.revokeToken).toHaveBeenCalledWith(
+        'validToken',
+      );
+    });
+  });
 });

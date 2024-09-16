@@ -122,4 +122,15 @@ describe('UsersController (e2e)', () => {
         expect(body.token).toBeDefined();
       });
   });
+
+  it('should return 204 if the user logs out successfully', async () => {
+    return request(app.getHttpServer())
+      .post('/users/logout')
+      .set('Authorization', `Bearer token`)
+      .send()
+      .expect(204)
+      .expect(() => {
+        expect(mockAuthService.logout).toHaveBeenCalled();
+      });
+  });
 });
