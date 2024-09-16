@@ -41,6 +41,11 @@ Este repositorio contiene la solución a la prueba técnica de Tyba. A continuac
     ```
 
 5. El servicio estará disponible en la siguiente URL: [http://localhost:3000/api/v1](http://localhost:3000/api/v1)
+6. Para detener el servicio, ejecutar el siguiente comando:
+
+    ```bash
+    docker compose down
+    ```
 
 ## Documentación
 
@@ -74,4 +79,4 @@ npm run test:newman
 
 2. Hacer uso de otras bases de datos
 
-    Por cuestiones de tiempo, se utilizó una base de datos relacional (Postgres) con todos los datos almacenados en una sola base de datos. Para un escenario real, se podría utilizar una base de datos NoSQL como MongoDB para almacenar los datos de las trasacciones realizadas y poder filtrarlas de manera más eficiente. En el caso de revocación de tokens, se podría utilizar una base de datos en memoria como Redis.
+    Por cuestiones de tiempo, se utilizó una base de datos relacional (Postgres) con todos los datos almacenados en una sola base de datos. Para un escenario real, se podría utilizar una base de datos NoSQL como MongoDB para almacenar los datos de las transacciones realizadas y poder filtrarlas de manera más eficiente. En el caso de revocación de tokens, se podría utilizar una base de datos en memoria como Redis.
