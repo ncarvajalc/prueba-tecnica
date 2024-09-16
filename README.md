@@ -61,3 +61,13 @@ Para ejecutar las pruebas de Postman, se debe ejecutar el siguiente comando:
 cd api
 npm run test:newman
 ```
+
+## Oportunidades de mejora
+
+1. Implementar un sistema de caché
+
+    Por cuestiones de tiempo, no se implementó un sistema de caché para almacenar las respuestas de la API. Esto podría reducir el tiempo de respuesta de la API y mejorar la experiencia del usuario.
+
+2. Hacer uso de otras bases de datos
+
+    Por cuestiones de tiempo, se utilizó una base de datos relacional (Postgres) con todos los datos almacenados en una sola base de datos. Para un escenario real, se podría utilizar una base de datos NoSQL como MongoDB para almacenar los datos de las trasacciones realizadas y poder filtrarlas de manera más eficiente. En el caso de revocación de tokens, se podría utilizar una base de datos en memoria como Redis.
