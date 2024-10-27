@@ -33,10 +33,10 @@ export class UsersService {
     }
     if (
       password.length < 8 ||
-      !password.match(/[A-Z]/) ||
-      !password.match(/[a-z]/) ||
-      !password.match(/[0-9]/) ||
-      !password.match(/[^A-Za-z0-9]/)
+      !RegExp(/[A-Z]/).exec(password) ||
+      !RegExp(/[a-z]/).exec(password) ||
+      !RegExp(/\d/).exec(password) ||
+      !RegExp(/[^A-Za-z0-9]/).exec(password)
     ) {
       throw new BusinessLogicException(
         'Password must have at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character',
